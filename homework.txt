@@ -1,0 +1,4 @@
+Homework 1: 'You have to flatten an obj'
+Homework 2: 'You have to wite polyfill for deep clone of an object' const newObj = obj.deepClone()
+Homework 3:  .find | .findIndex | .sort | .some
+Homework 4: Difference bw splice and slice in array
