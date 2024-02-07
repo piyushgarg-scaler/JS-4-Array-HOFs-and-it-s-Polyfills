@@ -1,4 +1,79 @@
-Homework 1: 'You have to flatten an obj'
-Homework 2: 'You have to wite polyfill for deep clone of an object' const newObj = obj.deepClone()
-Homework 3:  .find | .findIndex | .sort | .some
-Homework 4: Difference bw splice and slice in array
+// Homework 1: 'You have to flatten an obj'
+// Homework 2: 'You have to wite polyfill for deep clone of an object' const newObj = obj.deepClone()
+// Homework 3:  .find | .findIndex | .sort | .some
+// Homework 4: Difference bw splice and slice in array
+
+// Homework 1
+function flattenArray(arr) {
+  let result = [];
+  for (let el of arr) {
+    if (typeof el === "object") {
+      if (Array.isArray(el)) {
+        result.push(...flattenArray(el));
+      } else if (el === null) result.push(el);
+      else {
+        result.push(flattenObj(el));
+      }
+    } else {
+      result.push(el);
+    }
+  }
+  return result;
+}
+
+function isObjectFlat(obj) {
+  for (let el in obj)
+      if (typeof obj[el] === "object" && (Array.isArray(obj[el]) || obj[el] != null))
+        return false;
+  return true;
+}
+
+function flatObj(obj) {
+  let result = {};
+  for (let key in obj) {
+    if (typeof obj[key] === "object") {
+      if (obj[key] === null) result[key] = null;
+      else if (Array.isArray(obj[key])) {
+        const flatArray = flattenArray(obj[key]);
+        for (let i = 0; i < flatArray.length; i++) {
+          result[`${key}.${i}`] = flatArray[i];
+        }
+      } else {
+        const flattenedObj = flatObj(obj[key]);
+        for (let el in flattenedObj) {
+          result[`${key}.${el}`] = flattenedObj[el];
+        }
+      }
+    } else {
+      result[key] = obj[key];
+    }
+  }
+
+  if (!isObjectFlat(result)) result = flattenObj(result);
+  return result;
+}
+
+
+// Homework 2
+Object.prototype.deepClone = function deepClone() {
+  const result = Array.isArray(this) ? [] : {};
+  const objToBeCopied = this;
+
+  for (let el in objToBeCopied) {
+    if (typeof objToBeCopied[el] === "object") {
+      if (objToBeCopied[el] == null) result[el] = null;
+      else result[el] = objToBeCopied[el].deepClone();
+    } else {
+      result[el] = objToBeCopied[el];
+    }
+  }
+
+  return result;
+};
+
+// let abc = {a:{a:'b', b: [1,2,3]}}
+// const dec = abc.deepClone();
+// dec.a.a = 'Z';
+// dec.a.b = [4,5,6];
+// console.log(abc)
+// console.log(dec)
